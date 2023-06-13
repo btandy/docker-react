@@ -1,6 +1,4 @@
-# This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
-
 executors:
   docker-executor:
     docker:
@@ -11,10 +9,14 @@ jobs:
     executor: docker-executor
     steps:
       - checkout
+
       - setup_remote_docker:
-        version: 20.10.7
-      -run:
-        name: Build Docker Image
-        command: docker build -t myapp -f Dockerfile.dev .
+          version: 20.10.7
+
       - run:
-        command: docker run -t myapp npm run test -- --coverage
+          name: Build Docker Image
+          command: docker build -t myapp -f Dockerfile.dev .
+
+      - run:
+          name: Run Tests
+          command: docker run -t myapp npm run test -- --coverage
